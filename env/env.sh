@@ -5,3 +5,6 @@ export XDG_CACHE_HOME=~/.cache
 
 # Update the PATH for user bin
 export PATH=$PATH:~/bin
+
+# Add APY to the environment
+export APY_CONFIG=~/.dotfiles/apy/apy.json
