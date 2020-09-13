@@ -19,15 +19,18 @@ set rnu " relative number wrt to current line (rnu/nornu)
 set backspace=indent,eol,start
 set guioptions=  " Disables scrollbar from macvim
 set spelllang=en_gb
-set textwidth=79 " wrap at 80 " Text width
-set wrapmargin=2 " Actually wraps at 80+2
+" set textwidth=79 " wrap at 80 " Text width
+" set wrapmargin=2 " Actually wraps at 80+2
 set colorcolumn=80 " show where 80 columns is
 set nowrap " enable wrapping if window too small
-set lbr " Makes a lbr for certain characters, can be disabled i think
+" set lbr " Makes a lbr for certain characters, can be disabled i think
 set fo+=t " add text folding
+set nofoldenable
 set foldlevel=1
-set ts=2 sw=2 et " Gives the tabstop spaces length, shiftwidth is the number of spaces for normal
+set ts=2 sw=0 et " Gives the tabstop spaces length, shiftwidth is the number of spaces for normaloisfdaiosjfd 
 " set shell=zsh\ -i
+
+source $XDG_CONFIG_HOME/nvim/modules/ale.vim
 
 call plug#begin('$XDG_CONFIG_HOME/nvim/plugged')
 Plug 'tpope/vim-dispatch'
@@ -49,8 +52,14 @@ Plug 'vim-airline/vim-airline'
 Plug 'edkolev/tmuxline.vim'
 Plug 'mhinz/vim-grepper'
 Plug 'gruvbox-community/gruvbox'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'liuchengxu/vista.vim'
 call plug#end()
 
+
+augroup pandoc_syntax
+    au! BufNewFile,BufFilePre,BufRead *.md set syntax=markdown.pandoc
+augroup END
 
 syntax on  " Turn on syntax highlighting
 filetype plugin indent on  " Enable file type specific plugins and indentation
@@ -63,7 +72,9 @@ let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_invert_selection='0'
 colorscheme gruvbox 
 
+" Highlighting for python
 let g:semshi#mark_selected_nodes = 0
+
 
 " Airline appearance
 let g:airline_inactive_alt_sep=1
@@ -92,14 +103,14 @@ aug spelling_files
   au BufRead,BufNewFile *.tex setlocal spell " Spelling
   au BufRead,BufNewFile *.md setlocal spell " Spelling
 aug END
-inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+inoremap <C-a> <c-g>u<Esc>[s1z=`]a<c-g>u
 
 
 " Exit mode
 inoremap kj <ESC>
 " nnoremap <C-c> <ESC>
 " nnoremap kj <esc>
-vnoremap kj <ESC>
+" vnoremap kj <ESC>
 
 " Quick global substitute
 nnoremap S :%s//g<Left><Left>
@@ -147,12 +158,6 @@ nmap <Leader>fh :History<CR>
 " Edit snippets file for filetype
 nmap <Leader>fs :UltiSnipsEdit<CR>
 
-" New markdown note in ~/Documents/markdown_notes/
-nnoremap <leader>nn :NewNote<CR>
-
-" Open index file of markdown_notes
-nnoremap <leader>ni :vs $notes/index.md<CR>
-
 " Allow vim to find tags file in current dir
 set tags+=./tags;,tags
 
@@ -164,14 +169,14 @@ nmap <leader>gd <Plug>(coc-definition)
 nmap <leader>gy <Plug>(coc-type-definition)
 nmap <leader>gi <Plug>(coc-implementation)
 nmap <leader>gr <Plug>(coc-references)
-nmap <leader>rr <Plug>(coc-rename)
+nmap <leader>rr :Grepper -tool ag -buffer<cr>
 nmap <leader>g[ <Plug>(coc-diagnostic-prev)
 nmap <leader>g] <Plug>(coc-diagnostic-next)
 nmap <leader>q :cn<cr>
 nmap <leader>gq :cp<cr>
 nmap <silent> <leader>gp <Plug>(coc-diagnostic-prev-error)
 nmap <silent> <leader>gn <Plug>(coc-diagnostic-next-error)
-nmap <silent> <leader>ge :CocCommand explorer<CR>
+nmap <silent> <leader>gxp :!open "dash://python3:<cword>"<cr> 
 nmap <silent> <leader>gg :GFiles<CR>
 nnoremap <leader>cr :CocRestart
 
@@ -211,10 +216,12 @@ endfunction
 
 
 augroup maker
-    autocmd!
-    au BufRead,BufEnter *.tex setlocal makeprg=pdflatex\ -interaction=nonstopmode\ -output-directory=\'/Users/mike/.data/nvim/scratch_files/LaTeX/build\'\ %:S
-    au BufRead,BufEnter *.cc setlocal makeprg=g++-10\ -o\ %:p:r\ %:p&&%:p:r
-    au BufRead,BufEnter *.py setlocal makeprg=python\ %
+  autocmd!
+  au BufRead,BufEnter *.tex setlocal makeprg=pdflatex\ -interaction=nonstopmode\ -output-directory=\'/Users/mike/.data/nvim/scratch_files/LaTeX/build\'\ %:S
+  au BufRead,BufEnter *.cc setlocal makeprg=g++-10\ -o\ %:p:r\ %:p&&%:p:r
+  au BufRead,BufEnter *.py setlocal makeprg=python\ %
+  au BufRead,BufEnter *.py nmap <buffer> <leader><cr> :w<cr>:Start -wait=always python3 %:p<CR>
+  au BufRead,BufEnter *.py imap <buffer> ;u <c-x><c-u>
 augroup end
 
 " Cellmode settings for finding tmux target (notebook like functionality)
@@ -233,10 +240,9 @@ let g:grepper = {
     \ }}
 
 " Long settings files
-" source $XDG_CONFIG_HOME/nvim/modules/vimtex.vim " Vimtex settings file
-" source $XDG_CONFIG_HOME/nvim/modules/ale.vim
-" source $XDG_CONFIG_HOME/nvim/modules/ultisnips.vim
-" source $XDG_CONFIG_HOME/nvim/modules/quicktex.vim
+source $XDG_CONFIG_HOME/nvim/modules/vimtex.vim " Vimtex settings file
+source $XDG_CONFIG_HOME/nvim/modules/ultisnips.vim
+source $XDG_CONFIG_HOME/nvim/modules/quicktex.vim
 
-" " Searching and managing my notes scripts
-" source $XDG_CONFIG_HOME/nvim/modules/markdown.vim
+" Searching and managing my notes scripts
+source $XDG_CONFIG_HOME/nvim/modules/markdown.vim
