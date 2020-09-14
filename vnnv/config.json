@@ -1,0 +1,13 @@
+{
+  "path":"$HOME/Documents/markdown_notes/",
+  "style":{
+    "info": "dim cyan",
+    "succes": "green",
+    "error": "bold red",
+    "warning": "yellow",
+    "danger": "bold red"
+  },
+  "latex":{
+    "build_dir": "$XDG_DATA_HOME/nvim/vnnv/latex"
+  }
+}
