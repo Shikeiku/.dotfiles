@@ -1,0 +1,154 @@
+# Python standard lib snips
+snippet class "class with docstrings" b
+class ${1:MyClass}(${2:Object}):
+	"""
+	@todo: docstring for $1
+	"""
+	def __init__(self,$3):
+`!p 
+# parameters = re.findall('\w+', t[3])
+parameters = t[3].split(',')
+snip >> 2
+snip.rv += snip.mkline('\"\"\"@todo: Docstring for init method.')
+if parameters != []:
+	snip.rv += '\n'
+	snip.rv += '\n'
+	for parameter in parameters:
+		if parameter != 'self':
+			snip.rv += snip.mkline('/' + parameter.strip() + '/ @todo')
+			snip.rv += '\n'
+	snip.rv += '\n        '
+snip.rv += '\"\"\"'
+# else:
+# 	snip.rv = '\"\"\"@todo: to be defined.\n' + '\n'.join(parameters) + '\n\"\"\"'
+`
+
+	$0
+endsnippet
+
+snippet function "function without" b
+def ${1:myFunction}(${2:args}) -> ${3:returnType}:
+	${4:pass}
+endsnippet
+
+snippet function_doc "function with docstring" b
+def ${1:myFunction}(${2:args}) -> ${3:returnType}:
+	"""
+	@todo: Docstring for $1
+`!p 
+# parameters = re.findall('\w+', t[2])
+parameters = t[2].split(',')
+snip >> 1
+# snip.rv += snip.mkline('@todo: to be defined.')
+if parameters != []:
+	snip.rv += '\n'
+	for parameter in parameters:
+		snip.rv += snip.mkline('/' + parameter.strip() + '/ @todo')
+		snip.rv += '\n'
+	snip.rv += '\n    '
+snip.rv += '\"\"\"'
+# else:
+# 	snip.rv = '\"\"\"@todo: to be defined.\n' + '\n'.join(parameters) + '\n\"\"\"'
+`
+	${4:pass}
+endsnippet
+
+snippet method "classmethod with docstring"
+def ${1:myMethod}(${2:args}) -> ${3:returnType}:
+	"""
+	@todo: Docstring for $1
+	"""
+	$0
+endsnippet
+
+snippet py_main "if name is main pass" b
+if __name__ == '__main__':
+	pass
+endsnippet
+
+# Shutil snippets
+snippet shutil_get_terminal_size "returns a tuple of width and height" b
+width, height = shutil.get_terminal_size()
+endsnippet
+
+# Rich snippets
+snippet rich_import_console "imports the console class, and initializes it"
+from rich.console import Console
+console = Console()
+endsnippet
+
+snippet rich_print "normal rich print"
+console.print(${1:parameters})
+endsnippet
+
+snippet rich_print_succes "print green panel message"
+console.print(Panel.fit(${1:parameters}, style='succes'))
+endsnippet
+
+snippet rich_print_info "print blue info message"
+console.print(${1:parameters}, style='info')
+endsnippet
+
+snippet rich_print_error "print red error message in a box"
+console.print(Panel.fit(${1:parameters}, style='error'))
+endsnippet
+
+snippet rich_print_warning "print yellow warning message"
+console.print(${1:parameters}, style='warning')
+endsnippet
+
+snippet rich_locals "prints the local variables depending on level"
+console.print(locals())
+endsnippet
+
+snippet rich_log "logs the local variables and timestamps the parameters"
+console.log(${1:parameters}, log_locals=True)
+endsnippet
+
+
+# __init__.py snippets
+snippet __init__add_current_dir "add the current directory to python path"
+import os
+import sys
+
+module = os.path.dirname(__file__)
+sys.path.append(module)
+endsnippet
+
+# tags
+snippet "(\s)(ys) " "expands to braces" rA
+`!p
+snip.rv = '' if match.group(1) == ' ' else match.group(1)
+`($1)$0
+endsnippet
+
+snippet "(\w|\s|\(|\[)(ysb) " "expands to braces" rA
+`!p
+snip.rv = '' if match.group(1) == ' ' else match.group(1)
+`($1)$0
+endsnippet
+
+snippet "(\w|\s|\(|\[)(ysB) " "expands to braces" rA
+`!p
+snip.rv = ' ' if match.group(1) == ' ' else match.group(1)
+`{$1}$0
+endsnippet
+
+snippet "(\w|\s|\[)(ysq) " "expands to square braces" rA
+`!p
+snip.rv = ' ' if match.group(1) == ' ' else match.group(1)
+`[$1]$0
+endsnippet
+
+snippet "(\w|\s|\(|\[)(ys") " "expands to big apostrophes" rA
+`!p
+snip.rv = match.group(1)
+`"$1"$0
+endsnippet
+
+snippet "(\w|\s|\(|\[)(ys') " "expands to single apostrophes" rA
+`!p
+snip.rv = match.group(1)
+`'$1'$0
+endsnippet
+

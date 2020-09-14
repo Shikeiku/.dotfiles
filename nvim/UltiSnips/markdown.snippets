@@ -1,0 +1,49 @@
+snippet markdown_preamble_author "Author" b
+---
+author: Mike
+---
+endsnippet
+
+snippet codeblock_python "Python environment" b
+\`\`\`python
+$0
+\`\`\`
+<++>
+endsnippet
+
+snippet vnnv_preamble "vnnv preamble to add links and tags" b
+~~~{.preamble}
+tags = {${1:tags}}
+links = {
+${2:newline sepparated links}
+}
+~~~
+<++>
+endsnippet
+
+snippet vnnv_anki "Anki cloze card environment"
+<vnnvanki>
+<question>
+<++>
+</question>
+
+<cloze>
+<answer><++></answer>
+
+<++>
+</cloze>
+
+<Text/context>
+<++>
+</vnnvanki>
+<++>
+endsnippet
+
+snippet link_url_style "link to file or website"
+[${1:link_name}](${2:link_url})
+endsnippet
+
+snippet link_inline_image "link that places image in the place of the link"
+![${1:link_name}](${2:link_url})
+endsnippet
+
